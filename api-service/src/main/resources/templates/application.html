@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Новая заявка</title>
+    <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+
+</head>
+<body>
+<script>
+    function submitApplication() {
+        var object = {
+            "firstName": document.getElementsByName("name")[0].value,
+            "lastName": document.getElementsByName("surname")[0].value,
+            "email": document.getElementsByName("email")[0].value,
+            "dateBirth": document.getElementsByName("date")[0].value,
+            "liveCity": document.getElementsByName("city_live")[0].value,
+            "registrationCity": document.getElementsByName("city_registration")[0].value
+        };
+        fetch('./api/send-verification', {
+            method: "POST",
+            body: JSON.stringify(object),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "same-origin"
+        }).then(function(response) {
+            response.status;
+            response.statusText;
+            response.headers;
+            response.url;
+            return response.text()
+        }, function(error) {
+            error.message
+        })
+
+
+    }
+</script>
+
+<form onsubmit="submitApplication()">
+    <div class="container">
+        <h2>Application</h2>
+        <p>Please fill in this form to apply.</p>
+        <hr>
+
+        <label for="name"><b>Name</b></label>
+        <input type="text" placeholder="Enter your name" name="name" required>
+
+        <label for="surname"><b>Surname</b></label>
+        <input type="text" placeholder="Enter your surname" name="surname" required>
+
+        <label for="email"><b>Email</b></label>
+        <input type="email" placeholder="Enter Email" name="email" required>
+
+        <label for="date"><b>Date of birth</b></label>
+        <input type="date" placeholder="birthdate" name="date" required>
+
+        <label for="city_live"><b>City of live</b></label>
+        <input type="text" placeholder="Enter city of live" name="city_live" required>
+
+        <label for="city_registration"><b>City of registration</b></label>
+        <input type="text" placeholder="Enter city of registration" name="city_registration">
+
+        <hr>
+
+        <button type="submit" class="registerbtn">Apply</button>
+    </div>
+
+</form>
+</body>
+</html>

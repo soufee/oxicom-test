@@ -1,0 +1,80 @@
+version: "2"
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+      - "25672:25672"
+
+  consul:
+    image: consul:latest
+    ports:
+      - "8500:8500"
+      - "8600:8600"
+    command: "agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0"
+
+  db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+
+  mailer:
+    restart: on-failure
+    depends_on:
+      - rabbit
+    build:
+      context: ./mailer-service
+      dockerfile: Dockerfile
+    ports:
+      - "9084:9084"
+    command: bash -c "mvn spring-boot:run"
+
+  idgenerator:
+    restart: on-failure
+    build: ./id-generator
+    volumes:
+      - ~/.m2:/root/.m2
+    ports:
+      - "9081:9081"
+    command: bash -c "mvn spring-boot:run"
+    depends_on:
+      - consul
+
+
+#
+#  approver:
+#    restart: on-failure
+#    network_mode: host
+#    depends_on:
+#      - rabbit
+#      - consul
+#    build:
+#      context: ./approval-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "9082:9082"
+##    command: bash -c "mvn spring-boot:run"
+#
+#  api:
+#    restart: on-failure
+#    network_mode: host
+#    depends_on:
+#      - rabbit
+#      - consul
+#    build:
+#      context: ./api-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "9080:9080"
+##    command: bash -c "mvn spring-boot:run"

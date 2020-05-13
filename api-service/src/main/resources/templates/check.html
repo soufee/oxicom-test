@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка статуса заявки</title>
+    <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+</head>
+<body>
+<script>
+
+
+    function submitCheck() {
+        var id = document.getElementById("id").value;
+        var url = './api/check-verification-status/' + id;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.send();
+        xhr.onload = function () {
+            if (xhr.status !== 200) {
+                showError(xhr.status + " " + xhr.statusText)
+            } else {
+                var obj = JSON.parse(xhr.response);
+                showResult(obj.body)
+            }
+        };
+        return false;
+    }
+
+    function showResult(stringPromise) {
+        var element = document.getElementById("layer1");
+
+        var h = document.getElementById("layer2");
+        h.innerText = stringPromise;
+        element.style.display = 'block';
+        return false;
+    }
+
+    function showError(message) {
+        var element = document.getElementById("layer1");
+
+        var h = document.getElementById("layer2");
+        h.innerText = message;
+        element.style.display = 'block';
+        return false;
+    }
+
+</script>
+    <div align="right"  id="layer1" style="display: none;">
+        <div align="left" id="layer2">
+
+        </div>
+    </div>
+    <h1 class="my_header">Чтоб проверить статус вашей заявки введите его ID</h1>
+    <input type="text" placeholder="Ваш id" id="id">
+    <button class="button" onclick="submitCheck()">Отправить</button>
+</body>
+</html>
