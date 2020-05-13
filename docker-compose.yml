@@ -33,6 +33,7 @@ services:
     restart: on-failure
     depends_on:
       - rabbit
+      - consul
     build:
       context: ./mailer-service
       dockerfile: Dockerfile
@@ -42,14 +43,15 @@ services:
 
   idgenerator:
     restart: on-failure
-    build: ./id-generator
-    volumes:
-      - ~/.m2:/root/.m2
+    depends_on:
+      - consul
+    build:
+      context: ./id-generator
+      dockerfile: Dockerfile
     ports:
       - "9081:9081"
     command: bash -c "mvn spring-boot:run"
-    depends_on:
-      - consul
+
 
 
 #
