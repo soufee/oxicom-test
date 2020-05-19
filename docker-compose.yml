@@ -39,7 +39,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "9084:9084"
-    command: bash -c "mvn spring-boot:run"
 
   idgenerator:
     restart: on-failure
@@ -50,33 +49,27 @@ services:
       dockerfile: Dockerfile
     ports:
       - "9081:9081"
-    command: bash -c "mvn spring-boot:run"
 
+  approver:
+    restart: on-failure
+    network_mode: host
+    depends_on:
+      - rabbit
+      - consul
+    build:
+      context: ./approval-service
+      dockerfile: Dockerfile
+    ports:
+      - "9082:9082"
 
-
-#
-#  approver:
-#    restart: on-failure
-#    network_mode: host
-#    depends_on:
-#      - rabbit
-#      - consul
-#    build:
-#      context: ./approval-service
-#      dockerfile: Dockerfile
-#    ports:
-#      - "9082:9082"
-##    command: bash -c "mvn spring-boot:run"
-#
-#  api:
-#    restart: on-failure
-#    network_mode: host
-#    depends_on:
-#      - rabbit
-#      - consul
-#    build:
-#      context: ./api-service
-#      dockerfile: Dockerfile
-#    ports:
-#      - "9080:9080"
-##    command: bash -c "mvn spring-boot:run"
+  api:
+    restart: on-failure
+    network_mode: host
+    depends_on:
+      - rabbit
+      - consul
+    build:
+      context: ./api-service
+      dockerfile: Dockerfile
+    ports:
+      - "9080:9080"

@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service
 @Service
 @EnableRabbit
 
-class RecieveMessageHandler {
+class ReceiveMessageHandler {
     @Autowired
     private val mailSender: MailSender? = null
 
     private val gson = Gson()
-    private val logger: Logger = LoggerFactory.getLogger(RecieveMessageHandler::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(ReceiveMessageHandler::class.java)
 
     @RabbitListener(queues = ["approve1-1"])
     @RabbitHandler
