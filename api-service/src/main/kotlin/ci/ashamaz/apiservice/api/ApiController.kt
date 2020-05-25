@@ -34,14 +34,28 @@ class ApiController {
 
     val gson = Gson()
 
+    // Ужасно.
     @ResponseBody
     @RequestMapping(value = ["/send-verification"], method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun sendVerification(@RequestBody user: User?): UniversalResponse {
+        /**
+         * Вот так надо было делать.
+          user
+            ?.let {
+                personConverter?.convert(user)
+            }
+            ?.also {
+
+            }
+         */
         logger.debug("POST method")
+        // полностью блокирующий метод.
         val uniqueId: String = idGeneratorService?.getUniqueID() ?: throw Exception("Не удалось получить uniqeID")
         if (user != null) {
             val person = personConverter?.convert(user)
+            // 2ой if...
             if (person != null) {
+                // мутабельный id..
                 person.id = uniqueId
                 personService?.save(person)
                 user.uuid = uniqueId

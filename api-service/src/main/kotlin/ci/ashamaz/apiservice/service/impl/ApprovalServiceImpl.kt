@@ -15,6 +15,7 @@ import java.net.URI
 @EnableDiscoveryClient
 
 class ApprovalServiceImpl : ApprovalService {
+
     private val logger: Logger = LoggerFactory.getLogger(ApprovalServiceImpl::class.java)
 
     @Autowired

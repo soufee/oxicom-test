@@ -9,11 +9,9 @@ import java.util.*
 @RestController
 class IDGeneratorController {
     private val logger: Logger = LoggerFactory.getLogger(IDGeneratorController::class.java)
-    @GetMapping("/getuniqueid")
-    fun getVerification(): String {
-        val uuid = UUID.randomUUID().toString()
-        logger.info("Genrated ${uuid}")
-        return uuid
 
-    }
+    // getuniqueid - нейминг не очень. Вы сможете прочитать generatenewidforverificatedautomatedoperationbycategory{id} ?
+    @GetMapping("/getuniqueid")
+    fun getVerification(): String = UUID.randomUUID().toString()
+        .apply { logger.info("Generated $this") }
 }

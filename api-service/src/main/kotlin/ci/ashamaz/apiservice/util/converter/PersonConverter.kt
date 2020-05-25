@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
+/**
+ * Абсолютно бесполезный java style.
+ * fun User.toPerson(): Person
+ * */
 @Service
 class PersonConverter : Converter<User, Person> {
     override fun convert(user: User): Person? {
@@ -22,6 +25,7 @@ class PersonConverter : Converter<User, Person> {
         return person
     }
 
+    // expression body
     private fun parseDate(date: String): LocalDate {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return LocalDate.parse(date, formatter)

@@ -10,7 +10,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.net.URI
-import java.util.function.Function
 
 @Service
 @EnableDiscoveryClient
@@ -25,11 +24,20 @@ class IDGeneratorServiceImpl : IDGeneratorService {
     private val rest: RestTemplate? = null
 
     override fun getUniqueID(): String {
+        // абсолютно бесполезные 2 строчки кода --->
         if (client == null) throw IllegalStateException("Сервис получения уникальных ID не может быть определен")
         logger.debug("Найденный сервер {}", client.getInstances("id-generator").toString())
-        val service: URI = client.getInstances("id-generator")?.stream()?.map { obj: ServiceInstance -> obj.uri }
-                ?.findFirst()?.map { s: URI -> s.resolve("/getuniqueid") }?.get()
-                ?: throw IllegalStateException("Сервис id-generator не найден")
+        // <----- Это все можно вынести на инфраструктуру, сделав DiscoveryClient notNull.
+
+        val service: URI = client
+            .getInstances("id-generator")
+            ?.stream()
+            ?.map { obj: ServiceInstance -> obj.uri }
+            ?.findFirst()
+            ?.map { s: URI -> s.resolve("/getuniqueid") }
+            ?.get()
+            ?: throw IllegalStateException("Сервис id-generator не найден")
+
         return rest?.getForEntity(service, String::class.java)?.body ?: ""
     }
 }
