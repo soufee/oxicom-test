@@ -12,7 +12,7 @@ class PersonServiceImpl : PersonService {
     @Autowired
     val personRepository: PersonRepository? = null
 
-    override fun getPersonById(id: String): Person? {
+    override fun getPersonById(id: String /* а в чем логика? Принимать notNull в аргументе, который влияет на возвращаемое значение? безопаснее и удобнее сделать String?*/): Person? {
         return personRepository?.getById(id)
     }
 
@@ -29,6 +29,12 @@ class PersonServiceImpl : PersonService {
     }
 
     override fun updateApprovalStatus(person: Person): Person? {
+        /**
+        * getPersonById(person.id ?: "")?.let {
+        *   personRepository?.save(it.apply { isApproved = person.isApproved } )
+        * } ?: throw IllegalArgumentException("Пользователь не найден в базе")
+        * Всего 3 строчки кода.
+        * */
         val p = getPersonById(person.id ?: "")
         if (p != null) {
             p.isApproved = person.isApproved

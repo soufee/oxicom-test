@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-
+// см mailer service
 class ConfigureRabbit {
     val queueName1 = "approve1-1"
     val queueName2 = "approve1-2"

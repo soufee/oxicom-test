@@ -14,15 +14,19 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class ReceiveController {
+    // почему не бином?
     private val gson = Gson()
     private val logger: Logger = LoggerFactory.getLogger(ReceiveController::class.java)
 
+    // Autowired в конструктор
     @Autowired
     val validator: Validator? = null
 
+    // Autowired в конструктор
     @Autowired
     val mqPublisher: MqPublisher? = null
 
+    // много переменных не нужных. Для Java это нормально, kotlin way более лаконичный(см. mailer-service)
     @PostMapping("/approve")
     fun sendMessage(@RequestBody obj: String): String? {
         logger.debug("We have got a message: $obj")

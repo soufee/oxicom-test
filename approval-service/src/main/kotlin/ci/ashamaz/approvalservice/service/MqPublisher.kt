@@ -12,13 +12,16 @@ import org.springframework.stereotype.Service
 class MqPublisher {
     @Autowired
     private val rabbitTemplate: AmqpTemplate? = null
+
+    // нет private, и почему не бином?
     val gson = Gson()
+
     private val logger: Logger = LoggerFactory.getLogger(MqPublisher::class.java)
 
+    // почему не в application.properties?
     private val exchangeName: String = "approve.exchange"
 
-    fun publish(result: ApprovalResult) {
-        val obj = gson.toJson(result)
+    fun publish(result: ApprovalResult) = gson.toJson(result)?.let { obj ->
         rabbitTemplate?.convertAndSend(exchangeName, "", obj)
         logger.debug("$obj sent")
     }
